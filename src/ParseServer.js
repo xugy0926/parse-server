@@ -134,19 +134,29 @@ class ParseServer {
    * @static
    * Create an express app for the parse server
    * @param {Object} options let you specify the maxUploadSize when creating the express app  */
-  static app({ maxUploadSize = '20mb', appId }) {
+  static app(options) {
     // This app serves the Parse API directly.
     // It's the equivalent of https://api.parse.com/1 in the hosted Parse API.
+    const { maxUploadSize = '20mb', appId, enableCrossDomain = true } = options;
     var api = express();
     //api.use("/apps", express.static(__dirname + "/public"));
     // File handling needs to be before default middlewares are applied
-    api.use(
-      '/',
-      middlewares.allowCrossDomain,
-      new FilesRouter().expressRouter({
-        maxUploadSize: maxUploadSize,
-      })
-    );
+    if (enableCrossDomain) {
+      api.use(
+        '/',
+        middlewares.allowCrossDomain,
+        new FilesRouter().expressRouter({
+          maxUploadSize: maxUploadSize,
+        })
+      );
+    } else {
+      api.use(
+        '/',
+        new FilesRouter().expressRouter({
+          maxUploadSize: maxUploadSize,
+        })
+      );
+    }
 
     api.use('/health', function(req, res) {
       res.json({
@@ -161,7 +171,9 @@ class ParseServer {
     );
 
     api.use(bodyParser.json({ type: '*/*', limit: maxUploadSize }));
-    api.use(middlewares.allowCrossDomain);
+    if (enableCrossDomain) {
+      api.use(middlewares.allowCrossDomain);
+    }
     api.use(middlewares.allowMethodOverride);
     api.use(middlewares.handleParseHeaders);
 

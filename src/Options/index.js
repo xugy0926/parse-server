@@ -148,6 +148,9 @@ export interface ParseServerOptions {
   /* Enables the default express error handler for all errors
   :DEFAULT: false */
   enableExpressErrorHandler: ?boolean;
+  /* Enables the cross domain
+  :DEFAULT: true*/
+  enableCrossDomain: ?boolean;
   /* Sets the number of characters in generated object id's, default 10
   :DEFAULT: 10 */
   objectIdSize: ?number;

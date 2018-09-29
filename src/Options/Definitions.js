@@ -286,6 +286,12 @@ module.exports.ParseServerOptions = {
     action: parsers.booleanParser,
     default: false,
   },
+  enableCrossDomain: {
+    env: 'PARSE_SERVER_ENABLE_CROSS_DOMAIN',
+    help: 'Enables the default cross domain',
+    action: parsers.booleanParser,
+    default: true,
+  },
   objectIdSize: {
     env: 'PARSE_SERVER_OBJECT_ID_SIZE',
     help: "Sets the number of characters in generated object id's, default 10",
